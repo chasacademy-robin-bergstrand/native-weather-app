@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -6,18 +6,23 @@ import {
   TouchableOpacity,
   ScrollView,
   Switch,
-} from 'react-native';
-import WeatherCard from '../Components/WeatherCard';
-import { LinearGradient } from 'expo-linear-gradient';
+} from "react-native";
+import WeatherCard from "../Components/WeatherCard";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Home({ navigation, route }) {
-  const [cities, setCities] = useState(['Stockholm', 'Gothenburg', 'London']);
-  const [celcius, setCelsius] = useState(false);
+  /* const [cities, setCities] = useState([
+    { name: "Stockholm", id: 1 },
+    { name: "Gothenburg", id: 2 },
+    { name: "London", id: 3 },
+  ]); */
+  const [cities, setCities] = useState([]);
+  const [celcius, setCelsius] = useState(true);
 
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Add')}>
+        <TouchableOpacity onPress={() => navigation.navigate("Add")}>
           <Text style={styles.headerRight}>+</Text>
         </TouchableOpacity>
       ),
@@ -25,11 +30,11 @@ export default function Home({ navigation, route }) {
 
     navigation.setOptions({
       headerLeft: () => (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text>C</Text>
           <Switch
-            trackColor={{ false: '#767577', true: 'lightblue' }}
-            thumbColor={'lightblue'}
+            trackColor={{ false: "#767577", true: "lightblue" }}
+            thumbColor={"lightblue"}
             value={!celcius}
             onValueChange={() => {
               setCelsius((old) => !old);
@@ -44,15 +49,51 @@ export default function Home({ navigation, route }) {
   useEffect(() => {
     console.log(route);
     if (route.params != undefined) {
-      console.log('YESY');
+      console.log("YESY");
       console.log(route.params.city);
-      setCities((prev) => [...prev, route.params.city]);
+      setCities((prev) => [
+        ...prev,
+        { name: route.params.city, id: Date.now() },
+      ]);
     }
   }, [route.params]);
 
+  function deleteCity(id) {
+    const newCities = cities.filter((city, idx) => {
+      if (city.id != id) {
+        return city;
+      }
+    });
+    console.log(newCities);
+    setCities(newCities);
+    navigation.reload;
+  }
+  function moveUp(id) {
+    const pos = cities.map((city) => city.id).indexOf(id);
+    const newCities = [...cities];
+    if (pos != 0) {
+      [newCities[pos - 1], newCities[pos]] = [
+        newCities[pos],
+        newCities[pos - 1],
+      ];
+      setCities(newCities);
+    }
+  }
+  function moveDown(id) {
+    const pos = cities.map((city) => city.id).indexOf(id);
+    const newCities = [...cities];
+    if (pos != cities.length - 1) {
+      [newCities[pos + 1], newCities[pos]] = [
+        newCities[pos],
+        newCities[pos + 1],
+      ];
+      setCities(newCities);
+    }
+  }
+
   return (
     <LinearGradient
-      colors={['lightblue', 'white']}
+      colors={["lightblue", "white"]}
       style={styles.bg}
       start={[0, 0]}
       end={[1, 1]}
@@ -61,7 +102,17 @@ export default function Home({ navigation, route }) {
       <ScrollView>
         <View style={styles.container}>
           {cities.map((city, idx) => {
-            return <WeatherCard city={city} key={idx} celcius={celcius} />;
+            return (
+              <WeatherCard
+                city={city.name}
+                key={city.id}
+                id={city.id}
+                celcius={celcius}
+                deleteCity={deleteCity}
+                moveUp={moveUp}
+                moveDown={moveDown}
+              />
+            );
           })}
         </View>
       </ScrollView>
@@ -77,18 +128,18 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 20,
     padding: 10,
-    width: '100%',
-    alignItems: 'flex-start',
+    width: "100%",
+    alignItems: "flex-start",
     paddingTop: 125,
   },
   headerRight: {
     fontSize: 35,
-    color: 'black',
+    color: "black",
     opacity: 0.3,
   },
   headerLeft: {
     fontSize: 35,
-    color: 'black',
+    color: "black",
     opacity: 0.3,
   },
 });

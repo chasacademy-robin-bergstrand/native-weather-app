@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Text,
   View,
@@ -6,11 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-} from 'react-native';
-import WeatherCard from '../Components/WeatherCard';
-import { LinearGradient } from 'expo-linear-gradient';
+} from "react-native";
+import WeatherCard from "../Components/WeatherCard";
+import { LinearGradient } from "expo-linear-gradient";
 
-const API_KEY = 'b66e9a45d63021a36e85afc2d1daf31c';
+const API_KEY = "b66e9a45d63021a36e85afc2d1daf31c";
 
 export default function AddCity({ navigation }) {
   const [input, onChangeInput] = useState();
@@ -23,12 +23,12 @@ export default function AddCity({ navigation }) {
     console.log(data);
     if (data.length === 0) {
       Alert.alert(
-        'Error!',
-        'Invalid city name.',
+        "Error!",
+        "Invalid city name.",
         [
           {
-            text: 'Ok',
-            style: 'cancel',
+            text: "Ok",
+            style: "cancel",
           },
         ],
         {
@@ -37,16 +37,16 @@ export default function AddCity({ navigation }) {
       );
       return;
     }
-    console.log('HIII');
+    console.log("HIII");
     navigation.navigate({
-      name: 'Home',
+      name: "Home",
       params: { city: input },
     });
   }
 
   return (
     <LinearGradient
-      colors={['lightblue', 'white']}
+      colors={["lightblue", "white"]}
       style={styles.bg}
       start={[0, 0]}
       end={[1, 1]}
@@ -54,7 +54,7 @@ export default function AddCity({ navigation }) {
     >
       <View style={styles.container}>
         <TextInput
-          placeholder='City name'
+          placeholder="City name"
           style={styles.input}
           value={input}
           onChangeText={onChangeInput}
@@ -75,24 +75,28 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 20,
     padding: 10,
-    width: '100%',
-    alignItems: 'flex-start',
+    width: "100%",
+    alignItems: "flex-start",
     paddingTop: 125,
   },
   input: {
-    backgroundColor: 'white',
-    width: '100%',
+    backgroundColor: "white",
+    width: "100%",
     padding: 5,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 30,
     borderRadius: 10,
     opacity: 0.8,
+    marginBottom: 20,
   },
   button: {
-    width: '100%',
-    backgroundColor: 'lightblue',
-    alignItems: 'center',
+    width: "100%",
+    backgroundColor: "lightblue",
+    alignItems: "center",
     padding: 10,
+    borderRadius: 10,
+    alignSelf: "center",
+    width: 200,
   },
   buttonText: {
     fontSize: 30,
