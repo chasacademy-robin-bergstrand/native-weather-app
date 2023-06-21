@@ -1,8 +1,18 @@
-import { MenuView } from "@react-native-menu/menu";
-import { useState } from "react";
-import { Text, View, StyleSheet, Switch, TouchableOpacity } from "react-native";
+import { MenuView } from '@react-native-menu/menu';
+import { useState } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Switch,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import Icons from './Icons';
 
-const API_KEY = "b66e9a45d63021a36e85afc2d1daf31c";
+const API_KEY = 'b66e9a45d63021a36e85afc2d1daf31c';
+
+console.log(Icons['01d']);
 
 export default function WeatherCard({
   city,
@@ -49,7 +59,9 @@ export default function WeatherCard({
   return (
     <View style={styles.container}>
       {
-        <View style={{ position: "absolute", top: -10, right: 20 }}>
+        <View
+          style={{ position: 'absolute', top: -10, right: 20, zIndex: 100 }}
+        >
           <TouchableOpacity onPress={() => setMenuOpen((old) => !old)}>
             <Text
               style={{
@@ -62,47 +74,47 @@ export default function WeatherCard({
           {menuOpen && (
             <View
               style={{
-                position: "absolute",
+                position: 'absolute',
                 right: -20,
                 top: 40,
                 borderRadius: 10,
                 width: 100,
-                backgroundColor: "white",
-                overflow: "hidden",
+                backgroundColor: 'white',
+                overflow: 'hidden',
                 opacity: 1,
               }}
             >
               <TouchableOpacity
-                style={{ backgroundColor: "white", padding: 10 }}
+                style={{ backgroundColor: 'white', padding: 10 }}
                 onPress={() => moveUp(id)}
               >
-                <Text style={{ textAlign: "center", color: "black" }}>
+                <Text style={{ textAlign: 'center', color: 'black' }}>
                   Move up
                 </Text>
               </TouchableOpacity>
               <View
                 style={{
-                  width: "80%",
-                  alignSelf: "center",
-                  backgroundColor: "black",
+                  width: '80%',
+                  alignSelf: 'center',
+                  backgroundColor: 'black',
                   height: 1,
                   opacity: 0.2,
                 }}
               />
               <TouchableOpacity
-                style={{ backgroundColor: "white", padding: 10 }}
+                style={{ backgroundColor: 'white', padding: 10 }}
                 onPress={() => moveDown(id)}
               >
-                <Text style={{ textAlign: "center", color: "black" }}>
+                <Text style={{ textAlign: 'center', color: 'black' }}>
                   Move down
                 </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={{ backgroundColor: "salmon", padding: 10 }}
+                style={{ backgroundColor: 'salmon', padding: 10 }}
                 onPress={() => deleteCity(id)}
               >
-                <Text style={{ textAlign: "center", color: "white" }}>
+                <Text style={{ textAlign: 'center', color: 'white' }}>
                   Delete
                 </Text>
               </TouchableOpacity>
@@ -110,6 +122,7 @@ export default function WeatherCard({
           )}
         </View>
       }
+
       {weather ? (
         <>
           <Text style={styles.city}>{weather.name} </Text>
@@ -121,30 +134,44 @@ export default function WeatherCard({
                   weather.timezone * 1000
               )
                 .toUTCString()
-                .split("GMT")[0]
-                .split(" ")[4]
+                .split('GMT')[0]
+                .split(' ')[4]
             }
           </Text>
-          <Text style={styles.temp}>
-            {celcius
-              ? toCelcius(weather.main.temp)
-              : toFahrenheit(weather.main.temp)}
-            {celcius ? "C" : "F"}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {Icons[weather.weather[0].icon].src}
+            <Text
+              style={[
+                styles.temp,
+                {
+                  color: `${
+                    toCelcius(weather.main.temp) > 20
+                      ? `hsla(${20}, 80%, 70%, 1)`
+                      : `hsla(${-140}, 100%, 80%, 1)`
+                  }`,
+                },
+              ]}
+            >
+              {celcius
+                ? toCelcius(weather.main.temp)
+                : toFahrenheit(weather.main.temp)}
+              {celcius ? 'C' : 'F'}
+            </Text>
+          </View>
           <Text style={styles.feelsLike}>
-            Feels like{" "}
+            Feels like{' '}
             {celcius
               ? toCelcius(weather.main.feels_like)
               : toFahrenheit(weather.main.feels_like)}
-            {celcius ? "C" : "F"}
+            {celcius ? 'C' : 'F'}
           </Text>
         </>
       ) : (
         <View>
-          <Text style={{ textAlign: "center", fontSize: 20, marginBottom: 10 }}>
+          <Text style={{ textAlign: 'center', fontSize: 20, marginBottom: 10 }}>
             {city}
           </Text>
-          <Text style={{ textAlign: "center" }}>
+          <Text style={{ textAlign: 'center' }}>
             Unable to fetch weather data
           </Text>
         </View>
@@ -156,11 +183,11 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     borderRadius: 20,
-    width: "100%",
+    width: '100%',
     //backgroundColor: '#EEEEEE',
-    backgroundColor: "hsla(360, 100%, 100%, 0.6)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'hsla(360, 100%, 100%, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 20,
   },
   city: {
@@ -168,14 +195,15 @@ const styles = StyleSheet.create({
   },
   temp: {
     fontSize: 70,
-    color: `hsla(${-140}, 100%, 80%, 1)`,
+    //color: `hsla(${-140}, 100%, 80%, 1)`,
+    //color: `hsla(${20}, 80%, 70%, 1)`,
   },
   feelsLike: {
     fontSize: 20,
   },
   switchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 5,
   },
 });

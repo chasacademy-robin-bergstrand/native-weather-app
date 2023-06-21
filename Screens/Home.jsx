@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Switch,
-} from "react-native";
-import WeatherCard from "../Components/WeatherCard";
-import { LinearGradient } from "expo-linear-gradient";
+} from 'react-native';
+import WeatherCard from '../Components/WeatherCard';
+import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home({ navigation, route }) {
   /* const [cities, setCities] = useState([
@@ -22,7 +23,7 @@ export default function Home({ navigation, route }) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate("Add")}>
+        <TouchableOpacity onPress={() => navigation.navigate('Add')}>
           <Text style={styles.headerRight}>+</Text>
         </TouchableOpacity>
       ),
@@ -30,11 +31,11 @@ export default function Home({ navigation, route }) {
 
     navigation.setOptions({
       headerLeft: () => (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text>C</Text>
           <Switch
-            trackColor={{ false: "#767577", true: "lightblue" }}
-            thumbColor={"lightblue"}
+            trackColor={{ false: '#767577', true: 'lightblue' }}
+            thumbColor={'lightblue'}
             value={!celcius}
             onValueChange={() => {
               setCelsius((old) => !old);
@@ -44,19 +45,39 @@ export default function Home({ navigation, route }) {
         </View>
       ),
     });
+
+    getAsyncCities();
   }, [celcius]);
 
   useEffect(() => {
     console.log(route);
     if (route.params != undefined) {
-      console.log("YESY");
+      console.log('YESY');
       console.log(route.params.city);
-      setCities((prev) => [
-        ...prev,
+      const newCities = [
+        ...cities,
         { name: route.params.city, id: Date.now() },
-      ]);
+      ];
+      setCities(newCities);
+      setAsyncCities(newCities);
     }
   }, [route.params]);
+
+  async function setAsyncCities(newCities) {
+    const stringified = JSON.stringify(newCities);
+    await AsyncStorage.setItem('CITIES', stringified);
+    const test = await AsyncStorage.getItem('CITIES');
+    console.log(test);
+  }
+
+  async function getAsyncCities() {
+    const value = await AsyncStorage.getItem('CITIES');
+    if (value != null) {
+      const parsedValue = JSON.parse(value);
+      console.log(value);
+      setCities(parsedValue);
+    }
+  }
 
   function deleteCity(id) {
     const newCities = cities.filter((city, idx) => {
@@ -66,6 +87,7 @@ export default function Home({ navigation, route }) {
     });
     console.log(newCities);
     setCities(newCities);
+    setAsyncCities(newCities);
     navigation.reload;
   }
   function moveUp(id) {
@@ -77,6 +99,7 @@ export default function Home({ navigation, route }) {
         newCities[pos - 1],
       ];
       setCities(newCities);
+      setAsyncCities(newCities);
     }
   }
   function moveDown(id) {
@@ -88,12 +111,13 @@ export default function Home({ navigation, route }) {
         newCities[pos + 1],
       ];
       setCities(newCities);
+      setAsyncCities(newCities);
     }
   }
 
   return (
     <LinearGradient
-      colors={["lightblue", "white"]}
+      colors={['lightblue', 'white']}
       style={styles.bg}
       start={[0, 0]}
       end={[1, 1]}
@@ -127,19 +151,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 20,
-    padding: 10,
-    width: "100%",
-    alignItems: "flex-start",
+    padding: 15,
+    width: '100%',
+    alignItems: 'flex-start',
     paddingTop: 125,
   },
   headerRight: {
     fontSize: 35,
-    color: "black",
+    color: 'black',
     opacity: 0.3,
   },
   headerLeft: {
     fontSize: 35,
-    color: "black",
+    color: 'black',
     opacity: 0.3,
   },
 });
