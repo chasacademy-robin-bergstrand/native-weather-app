@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Switch,
-} from 'react-native';
-import WeatherCard from '../Components/WeatherCard';
-import { LinearGradient } from 'expo-linear-gradient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+} from "react-native";
+import WeatherCard from "../Components/WeatherCard";
+import { LinearGradient } from "expo-linear-gradient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home({ navigation, route }) {
   /* const [cities, setCities] = useState([
@@ -23,7 +23,7 @@ export default function Home({ navigation, route }) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('Add')}>
+        <TouchableOpacity onPress={() => navigation.navigate("Add")}>
           <Text style={styles.headerRight}>+</Text>
         </TouchableOpacity>
       ),
@@ -31,11 +31,11 @@ export default function Home({ navigation, route }) {
 
     navigation.setOptions({
       headerLeft: () => (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text>C</Text>
           <Switch
-            trackColor={{ false: '#767577', true: 'lightblue' }}
-            thumbColor={'lightblue'}
+            trackColor={{ false: "#767577", true: "lightblue" }}
+            thumbColor={"lightblue"}
             value={!celcius}
             onValueChange={() => {
               setCelsius((old) => !old);
@@ -52,7 +52,7 @@ export default function Home({ navigation, route }) {
   useEffect(() => {
     console.log(route);
     if (route.params != undefined) {
-      console.log('YESY');
+      console.log("YESY");
       console.log(route.params.city);
       const newCities = [
         ...cities,
@@ -65,13 +65,13 @@ export default function Home({ navigation, route }) {
 
   async function setAsyncCities(newCities) {
     const stringified = JSON.stringify(newCities);
-    await AsyncStorage.setItem('CITIES', stringified);
-    const test = await AsyncStorage.getItem('CITIES');
+    await AsyncStorage.setItem("CITIES", stringified);
+    const test = await AsyncStorage.getItem("CITIES");
     console.log(test);
   }
 
   async function getAsyncCities() {
-    const value = await AsyncStorage.getItem('CITIES');
+    const value = await AsyncStorage.getItem("CITIES");
     if (value != null) {
       const parsedValue = JSON.parse(value);
       console.log(value);
@@ -117,7 +117,7 @@ export default function Home({ navigation, route }) {
 
   return (
     <LinearGradient
-      colors={['lightblue', 'white']}
+      colors={["lightblue", "white"]}
       style={styles.bg}
       start={[0, 0]}
       end={[1, 1]}
@@ -152,18 +152,18 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 20,
     padding: 15,
-    width: '100%',
-    alignItems: 'flex-start',
+    width: "100%",
+    alignItems: "flex-start",
     paddingTop: 125,
   },
   headerRight: {
     fontSize: 35,
-    color: 'black',
+    color: "black",
     opacity: 0.3,
   },
   headerLeft: {
     fontSize: 35,
-    color: 'black',
+    color: "black",
     opacity: 0.3,
   },
 });
